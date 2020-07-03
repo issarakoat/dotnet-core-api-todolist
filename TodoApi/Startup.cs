@@ -23,9 +23,15 @@ namespace TodoApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TodoContext>(opt =>
-                opt.UseInMemoryDatabase("TodoList"));
+            services.AddDbContext<TodoContext>(options =>
+    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
+
+
+            //services.AddDbContext<TodoContext>(opt =>
+            //    opt.UseInMemoryDatabase("TodoList"));
+            services.AddControllers();
+            services.AddCors();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +47,9 @@ namespace TodoApi
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseCors(options => options.WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
