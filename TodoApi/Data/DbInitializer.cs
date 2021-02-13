@@ -11,10 +11,12 @@ namespace TodoApi.Data
     {
         public static void Initialize(TodoContext context)
         {
-            context.Database.EnsureCreated();
+           context.Database.EnsureCreated();
             //context.Database.EnsureDeleted();
             //context.Database.Migrate();
-            var Todos = new TodoItem[]{
+            if (!context.TodoItems.Any())
+            {
+                var Todos = new TodoItem[]{
                     new TodoItem
                     {
                         Name = "Clen the house",
@@ -29,14 +31,16 @@ namespace TodoApi.Data
                     {
                         Name = "Play guitar",
                         IsComplete = false,
- 
+
                     },
                 };
-            foreach (TodoItem todo in Todos)
-            {
-                context.TodoItems.Add(todo);
+                foreach (TodoItem todo in Todos)
+                {
+                    context.TodoItems.Add(todo);
+                }
+                context.SaveChanges();
             }
-            context.SaveChanges();
+
         }
     }
 }
